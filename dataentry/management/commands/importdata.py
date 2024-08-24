@@ -12,13 +12,6 @@ class Command(BaseCommand):
         parser.add_argument('file_path', type=str, help='Path to the csv file')
         parser.add_argument('model_name', type=str, help='Name of the model')
 
-    def add_student(self, data, model: models.Model):
-        roll_no = data['roll_no']
-        existing_record = model.objects.filter(roll_no = roll_no).exists()
-        if not existing_record:
-            model.objects.create(**data)
-        else:
-            self.stdout.write(self.style.WARNING(f'Student with roll no {roll_no} already exists!'))
 
     def handle(self, *args, **options):
         file_path = options['file_path']
@@ -38,6 +31,6 @@ class Command(BaseCommand):
         with open(file_path, 'r') as file:
             reader = csv.DictReader(file)
             for row in reader:
-                self.add_student(row, model)
+                model.objects.create(**row)
 
         self.stdout.write(self.style.SUCCESS("Data added successfully!")) 
