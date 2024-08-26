@@ -31,6 +31,8 @@ class Command(BaseCommand):
         with open(file_path, 'r') as file:
             reader = csv.DictReader(file)
             for row in reader:
+                if row.__contains__('id'):
+                    del row['id']
                 model.objects.create(**row)
 
         self.stdout.write(self.style.SUCCESS("Data added successfully!")) 
