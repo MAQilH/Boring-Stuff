@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib import messages
 from django.core.management import call_command
 from django.shortcuts import render, redirect
 
@@ -19,8 +20,9 @@ def import_data(request):
 
         try:
             call_command('importdata', full_path, model_name)
+            messages.success(request, 'Data imported successfully')
         except Exception as e:
-            raise e
+            messages.error(request, str(e))
 
         return redirect('import_data')
 
