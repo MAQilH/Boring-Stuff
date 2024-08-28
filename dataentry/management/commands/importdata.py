@@ -4,6 +4,8 @@ from django.apps import apps
 import csv
 from django.db import models, DataError
 
+from dataentry.utils import check_csv_errors
+
 
 class Command(BaseCommand):
     help = 'Import data from csv file'
@@ -17,26 +19,10 @@ class Command(BaseCommand):
         file_path = options['file_path']
         model_name = options['model_name'].capitalize()
 
-        model = None
-        for app_config in apps.get_app_configs():
-            try:
-                model = apps.get_model(app_config.label, model_name)
-                break
-            except LookupError:
-                continue
-        
-        if not model:
-            raise CommandError(f'Model {model_name} not found in any app!')
-
-
-        model_fields = [field.name for field in model._meta.fields if field.name != 'id']
+        model = check_csv_errors(file_path, model_name)
 
         with open(file_path, 'r') as file:
             reader = csv.DictReader(file)
-            csv_header = reader.fieldnames
-            if csv_header != model_fields:
-                raise DataError(f'CSV file doesn\'t match with the {model_name} table fields.')
-
             for row in reader:
                 if row.__contains__('id'):
                     del row['id']

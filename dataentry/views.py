@@ -3,9 +3,9 @@ from django.contrib import messages
 from django.core.management import call_command
 from django.shortcuts import render, redirect
 
-from dataentry.utils import get_all_custom_models_name
+from dataentry.tasks import import_data_task
+from dataentry.utils import get_all_custom_models_name, check_csv_errors
 from uploads.models import Upload
-
 
 def import_data(request):
     if request.method == 'POST':
@@ -19,13 +19,13 @@ def import_data(request):
         full_path = base_url + relative_path
 
         try:
-            call_command('importdata', full_path, model_name)
-            messages.success(request, 'Data imported successfully')
+            check_csv_errors(full_path, model_name)
+            import_data_task.delay(full_path, str(model_name))
+            messages.success(request, 'Your data was been imported, you will be notified once it is done.')
         except Exception as e:
             messages.error(request, str(e))
 
         return redirect('import_data')
-
     else:
         custom_models_name = get_all_custom_models_name()
         context = {

@@ -1,4 +1,9 @@
+import csv
+
 from django.apps import apps
+from django.core.management import CommandError
+from django.db import DataError
+
 
 def get_all_custom_models_name():
     default_models = ['LogEntry', 'Permission', 'Group', 'User', 'ContentType', 'Session', 'Upload']
@@ -8,3 +13,27 @@ def get_all_custom_models_name():
         if name not in default_models:
             custom_models.append(name)
     return custom_models
+
+def check_csv_errors(file_path, model_name):
+    model = None
+    for app_config in apps.get_app_configs():
+        try:
+            model = apps.get_model(app_config.label, model_name)
+            break
+        except LookupError:
+            continue
+
+    if not model:
+        raise CommandError(f'Model {model_name} not found in any app!')
+
+    model_fields = [field.name for field in model._meta.fields if field.name != 'id']
+    try:
+        with open(file_path, 'r') as file:
+            reader = csv.DictReader(file)
+            csv_header = reader.fieldnames
+            if csv_header != model_fields:
+                raise DataError(f'CSV file doesn\'t match with the {model_name} table fields.')
+    except Exception as e:
+        raise e
+
+    return model
