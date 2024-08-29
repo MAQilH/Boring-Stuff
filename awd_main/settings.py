@@ -142,9 +142,11 @@ MESSAGE_TAGS = {
 CELERY_BROKER_URL = 'redis://localhost:6379'
 
 # Email configuration
+EMAIL_BACKEND = 'awd_main.backends.email_backend.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT', cast=int)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = 'Automate with Django <develop.aqil@gmail.com>'
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'Automate with Django <mohammad9221078904@gmail.com>'
+EMAIL_USE_SSL = False

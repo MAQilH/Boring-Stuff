@@ -10,12 +10,9 @@ from django.conf import settings
 
 @app.task
 def celery_test_task():
-    # time.sleep(10)
     print("work finished!")
-
     send_email()
     return 'task executed successfully.'
-
 
 def send_email():
     mail_subject = 'Test Subject'
