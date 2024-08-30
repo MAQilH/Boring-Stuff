@@ -3,8 +3,8 @@ from django.contrib import messages
 from django.core.management import call_command
 from django.shortcuts import render, redirect
 
-from dataentry.tasks import import_data_task
-from dataentry.utils import get_all_custom_models_name, check_csv_errors
+from dataentry.tasks import import_data_task, export_data_task
+from dataentry.utils import get_all_custom_models_name, check_csv_errors, check_model_name_errors
 from uploads.models import Upload
 
 def import_data(request):
@@ -33,3 +33,23 @@ def import_data(request):
         }
 
     return render(request, 'dataentry/importdata.html', context)
+
+
+def export_data(request):
+    if request.method == 'POST':
+        model_name = request.POST.get('model_name')
+
+        try:
+            check_model_name_errors(model_name)
+            export_data_task.delay(model_name)
+            messages.success(request, 'Your data was exported, you will be notified once it is done.')
+        except Exception as e:
+            messages.error(request, str(e))
+
+        return redirect('export_data')
+    else:
+        custom_models_name = get_all_custom_models_name()
+        context = {
+            'custom_models_name': custom_models_name
+        }
+    return render(request, 'dataentry/exportdata.html', context)

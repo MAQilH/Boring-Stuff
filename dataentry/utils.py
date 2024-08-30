@@ -1,4 +1,6 @@
 import csv
+import datetime
+import os.path
 
 from django.apps import apps
 from django.conf import settings
@@ -17,16 +19,7 @@ def get_all_custom_models_name():
     return custom_models
 
 def check_csv_errors(file_path, model_name):
-    model = None
-    for app_config in apps.get_app_configs():
-        try:
-            model = apps.get_model(app_config.label, model_name)
-            break
-        except LookupError:
-            continue
-
-    if not model:
-        raise CommandError(f'Model {model_name} not found in any app!')
+    model = check_model_name_errors(model_name)
 
     model_fields = [field.name for field in model._meta.fields if field.name != 'id']
     try:
@@ -40,7 +33,29 @@ def check_csv_errors(file_path, model_name):
 
     return model
 
-def send_email_notification(subject, message, to_email):
+def check_model_name_errors(model_name):
+    model = None
+    for app_config in apps.get_app_configs():
+        try:
+            model = apps.get_model(app_config.label, model_name)
+            break
+        except LookupError:
+            continue
+
+    if not model:
+        raise CommandError(f'Model {model_name} not found in any app!')
+    return model
+
+
+def send_email_notification(subject, message, to_email, attachment=None):
     from_email = settings.DEFAULT_FROM_EMAIL
     email = EmailMessage(subject, message, from_email, [to_email])
+    if attachment:
+        email.attach_file(attachment)
     email.send()
+
+def generate_csv_export_file_path(model_name):
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+    file_name = f'{model_name}_exported_data_{timestamp}.csv'
+    file_path = os.path.join(settings.MEDIA_ROOT, 'store', file_name)
+    return file_path

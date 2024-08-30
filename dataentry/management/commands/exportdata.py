@@ -1,3 +1,4 @@
+from ast import parse
 from typing import Any
 from django.core.management.base import BaseCommand, CommandParser
 from dataentry.models import Student
@@ -5,35 +6,26 @@ from django.apps import apps
 import datetime
 import csv
 
+from dataentry.utils import check_model_name_errors
+
 
 class Command(BaseCommand):
     help = 'Export data from the database to CSV file'
 
     def add_arguments(self, parser: CommandParser) -> None:
         parser.add_argument('model_name', type=str, help='Model Name')
+        parser.add_argument('file_path', type=str, help='File Path')
     
 
     def handle(self, *args, **kwargs) -> str | None:       
         model_name = kwargs['model_name'].capitalize()
-        model = None
+        file_path = kwargs['file_path']
 
-        for app_config in apps.get_app_configs():
-            try:
-                model = apps.get_model(app_config.label, model_name)
-                break
-            except LookupError:
-                continue
-        
-        if not model:
-            self.stderr.write(f'Model {model_name} can not found!')
-            return
+        model = check_model_name_errors(model_name)
 
         data = model.objects.all()
 
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        file_name = f'{model_name}_exported_data_{timestamp}.csv'
-
-        with open(file_name, 'w', newline='') as file:
+        with open(file_path, 'w', newline='') as file:
             writer = csv.writer(file)
 
             writer.writerow([field.name for field in model._meta.fields])
