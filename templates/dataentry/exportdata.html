@@ -1,18 +1,6 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <script src="{% static 'js/custom.js' %}"></script>
-</head>
-<body>
-<div class="container">
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5 alert-success shadow" style="max-width: 600px; padding: 50px; border-radius: 10px">
     <h3 class="text-center">Export Data From Database Table</h3>
     <form action="{% url 'export_data' %}" method="POST"
           style="max-width: 600px; margin: auto; padding-top: 50px">
@@ -28,12 +16,11 @@
             </select>
         </div>
 
-        <input type="submit" value="Export Data" class="btn btn-primary">
+        <input type="submit" value="Export Data" class="btn btn-success mt-4">
 
         <div style="margin-top: 10px">
             {% include 'alerts.html' %}
         </div>
     </form>
 </div>
-</body>
-</html>
+{% endblock %}
