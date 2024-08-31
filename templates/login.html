@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
     {% load crispy_forms_tags %}
-    <div class="container alert-primary shadow mt-5" style="max-width: 600px; border-radius: 10px; padding: 50px">
+    <div class="container alert-primary shadow mt-5 mb-5 rounded" style="max-width: 600px; padding: 50px">
         <h2 class="text-center">Login</h2>
         <form action="{% url 'login' %}" method="POST">
             {% csrf_token %}

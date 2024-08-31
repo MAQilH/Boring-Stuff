@@ -7,7 +7,7 @@ from dataentry.utils import send_email_notification, generate_csv_export_file_pa
 
 @app.task
 def celery_test_task():
-    send_email_notification('Test Subject', 'Sample Message', settings.DEFAULT_TO_EMAIL)
+    send_email_notification('Test Subject', 'Sample Message', [settings.DEFAULT_TO_EMAIL])
     return 'task executed successfully.'
 
 
@@ -19,7 +19,7 @@ def import_data_task(file_path, model_name):
         raise e
     send_email_notification('Import successfully done!',
               'your data successfully inserted to the corresponding model!',
-              settings.DEFAULT_TO_EMAIL
+              [settings.DEFAULT_TO_EMAIL]
                 )
     return "Data imported successfully."
 
@@ -32,6 +32,7 @@ def export_data_task(model_name):
         raise e
     send_email_notification('Export successfully done!',
                             'Exported data attached to this email!',
-                            settings.DEFAULT_TO_EMAIL,
+                            [settings.DEFAULT_TO_EMAIL],
                             attachment=export_file_path)
     return "Data exported successfully."
+

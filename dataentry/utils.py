@@ -8,7 +8,6 @@ from django.core.mail import EmailMessage
 from django.core.management import CommandError
 from django.db import DataError
 
-
 def get_all_custom_models_name():
     default_models = ['LogEntry', 'Permission', 'Group', 'User', 'ContentType', 'Session', 'Upload']
     custom_models = []
@@ -46,12 +45,12 @@ def check_model_name_errors(model_name):
         raise CommandError(f'Model {model_name} not found in any app!')
     return model
 
-
 def send_email_notification(subject, message, to_email, attachment=None):
     from_email = settings.DEFAULT_FROM_EMAIL
-    email = EmailMessage(subject, message, from_email, [to_email])
+    email = EmailMessage(subject, message, from_email, to_email)
     if attachment:
         email.attach_file(attachment)
+    email.content_subtype = 'html'
     email.send()
 
 def generate_csv_export_file_path(model_name):
