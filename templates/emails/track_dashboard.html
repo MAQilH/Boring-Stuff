@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container pt-5">
+        <h2 class="text-center mb-3">
+            Email Tracking Dashboard
+        </h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Subject</th>
+                <th scope="col">List</th>
+                <th scope="col">TotalSent</th>
+                <th scope="col">Event</th>
+                <th scope="col">Sent at</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for email in emails %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>
+                        <a href="{% url 'track_stats' email.id %}" class="text-decoration-none fw-bold">
+                            {{ email.subject }}
+                        </a>
+                    </td>
+                    <td>{{ email.email_list }}</td>
+                    <td>{{ email.total_sent }}</td>
+                    <td>
+                        <div>{{ email.open_rate }}% Opened</div>
+                        <div>{{ email.click_rate }}% Clicked</div>
+                    </td>
+                    <td>{{ email.send_at }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -13,7 +13,6 @@ def home(request):
     return render(request, 'home.html')
 
 
-
 def celery_test(request):
     celery_test_task.delay()
     return HttpResponse('its working')
@@ -41,9 +40,7 @@ def login(request):
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-
             user = auth.authenticate(username=username, password=password)
-
             if user is not None:
                 auth.login(request, user)
                 return redirect('home')

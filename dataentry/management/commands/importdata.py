@@ -1,8 +1,6 @@
-from typing import Any
-from django.core.management.base import BaseCommand, CommandParser, CommandError
-from django.apps import apps
 import csv
-from django.db import models, DataError
+
+from django.core.management.base import BaseCommand, CommandParser
 
 from dataentry.utils import check_csv_errors
 

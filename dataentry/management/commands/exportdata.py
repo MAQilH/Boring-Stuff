@@ -1,10 +1,6 @@
-from ast import parse
-from typing import Any
-from django.core.management.base import BaseCommand, CommandParser
-from dataentry.models import Student
-from django.apps import apps
-import datetime
 import csv
+
+from django.core.management.base import BaseCommand, CommandParser
 
 from dataentry.utils import check_model_name_errors
 
