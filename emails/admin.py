@@ -12,3 +12,5 @@ admin.site.register(Subscriber)
 admin.site.register(Email)
 admin.site.register(EmailTracking, EmailTrackingAdmin)
 admin.site.register(Sent)
+
+# python-decouple django-crispy-forms certifi beautifulsoup4

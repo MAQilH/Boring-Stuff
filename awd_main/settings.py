@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'emails',
-    'ckeditor'
+    'ckeditor',
+    'image_compression'
 ]
 
 MIDDLEWARE = [
@@ -158,6 +159,7 @@ EMAIL_USE_SSL = False
 # Crispy configuration
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 
 # CSRF config
 BASE_URL = config('NGROK')
