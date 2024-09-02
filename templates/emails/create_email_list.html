@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load crispy_forms_tags %}
+    <div class="container shadow mt-5 mb-5 rounded" style="max-width: 600px; padding: 50px">
+        <h2 class="text-center">Create Email List</h2>
+        <form action="{% url 'create_email_list' %}" method="POST" enctype="multipart/form-data" class="mt-4">
+            {% csrf_token %}
+            <label class="form-label" for="list_name">Name</label>
+            <input type="text" name="list_name" class="form-control" placeholder="Ex. Subscriber">
+
+            <label for="formFile" class="form-label mt-3">Import emails</label>
+            <input class="form-control" type="file" id="formFile">
+            <div class="form-group pt-4">
+                <input type="submit" class="btn btn-primary" value="Submit">
+            </div>
+            <div style="margin-top: 10px">
+                {% include 'alerts.html' %}
+            </div>
+        </form>
+        <div class="container mt-2 p-0">
+            <a href="{% url 'add_email_to_list' %}">add email to list</a>
+        </div>
+    </div>
+{% endblock %}

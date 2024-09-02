@@ -42,4 +42,3 @@ def compress(request):
             'form': form
         }
         return render(request, 'image_compression/compress.html', context=context)
-

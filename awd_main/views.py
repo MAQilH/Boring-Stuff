@@ -8,16 +8,6 @@ from django.shortcuts import render, redirect
 from awd_main.forms import RegistrationForm
 from dataentry.tasks import celery_test_task
 
-
-def home(request):
-    return render(request, 'home.html')
-
-
-def celery_test(request):
-    celery_test_task.delay()
-    return HttpResponse('its working')
-
-
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -32,7 +22,6 @@ def register(request):
         context = {'form': form}
 
     return render(request, 'register.html', context)
-
 
 def login(request):
     if request.method == 'POST':
@@ -53,7 +42,6 @@ def login(request):
     else:
         form = AuthenticationForm()
         return render(request, 'login.html', {'form': form})
-
 
 def logout(request):
     auth.logout(request)
